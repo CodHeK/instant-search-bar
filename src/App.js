@@ -51,9 +51,15 @@ class App extends Component {
         </FormGroup>
         <hr />
         <h3 style={{ textAlign: 'left' }}>You searched for : {search} </h3>
-
         <div>
-
+          {
+            data.map((each, index) => (
+              <div className="jumbotron" key={index}>
+                  <h3 style={{ fontWeight:'700', textTransform:'uppercase' }}>{each.title}</h3>
+                  <h4>By {each.author}</h4>
+              </div>
+            ))
+          }
         </div>
       </div>
     );
