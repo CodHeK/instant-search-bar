@@ -1,36 +1,9 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import axios from 'axios'
 import './App.css';
 
-let initialData = [
-  {
-    title : "grey goose",
-    author : "dooylan"
-  },
-  {
-    title : "rode goose",
-    author : "dood"
-  },
-  {
-    title : "red goose",
-    author : "gagan"
-  },
-  {
-    title : "blue goose",
-    author : "gaga"
-  },
-  {
-    title : "green goose",
-    author : "anmol"
-  },
-  {
-    title : "black goose",
-    author : "mantek"
-  }
-]
-
-
-
+let initialData = []
 
 class App extends Component {
   constructor(props) {
@@ -44,10 +17,14 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.setState({
-      data: initialData,
-      error: []
+    axios.get('https://jsonplaceholder.typicode.com/posts/').then(({ data }) => {
+      initialData.push(data);
+      this.setState({
+        data: data,
+        error: []
+      })
     })
+    console.log(initialData);
   }
 
   searchParam(event) {
@@ -55,17 +32,20 @@ class App extends Component {
     let filtered = []
     let errorVal = []
     console.log(searchedValue);
-    for(var i = 0;i < initialData.length;i++) {
-      console.log(initialData[i].title.match(searchedValue) || initialData[i].author.match(searchedValue));
-      if(initialData[i].title.match(searchedValue) || initialData[i].author.match(searchedValue)) {
-        filtered.push(initialData[i]);
+    console.log(initialData[0].length);
+    console.log(initialData[0][0].title + " " + initialData[0][0].userId);
+    for(var i = 0;i < initialData[0].length;i++) {
+      var Ids = initialData[0][i].userId;
+      var titles = initialData[0][i].title;
+      if(String(Ids).match(searchedValue) || String(titles).match(searchedValue)) {
+        console.log(initialData[0][i]);
+        filtered.push(initialData[0][i]);
       }
     }
     if(filtered.length === 0) {
       let error =
         {
-          title : "Unable to search for : " + searchedValue,
-          author : ""
+          title : "Unable to search for : " + searchedValue
         }
         errorVal.push(error);
     }
@@ -87,8 +67,8 @@ class App extends Component {
           {
             data.map((each, index) => (
               <div className="jumbotron" key={index}>
-                  <h3 style={{ fontWeight:'700', textTransform:'uppercase' }}>{each.title}</h3>
-                  <h4>By {each.author}</h4>
+                  <h3 style={{ fontWeight:'700' }}>{each.title}</h3>
+                  <h4>By user <b>#{each.userId}</b></h4>
               </div>
             ))
           }
