@@ -58,8 +58,8 @@ class App extends Component {
     return (
       <div className="App container">
         <FormGroup controlId="formBasicText">
-          <ControlLabel>SEARCH</ControlLabel>
-          <FormControl type="text" onChange={this.searchParam} placeholder="Enter your search here..." />
+          <ControlLabel><h2>INSTANT - SEARCH</h2></ControlLabel>
+          <FormControl type="text" style={{ height: '50px' }} onChange={this.searchParam} placeholder="Enter your search here..." />
         </FormGroup>
         <hr />
         <h3 style={{ textAlign: 'left' }}>You searched for <b>{search}</b> - <b>{data.length}</b> results founds</h3>
