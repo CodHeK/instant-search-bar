@@ -30,12 +30,15 @@ let initialData = [
 ]
 
 
+
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search : "",
       data : [],
+      error : []
     }
     this.searchParam = this.searchParam.bind(this);
   }
@@ -43,12 +46,14 @@ class App extends Component {
   componentWillMount() {
     this.setState({
       data: initialData,
+      error: []
     })
   }
 
   searchParam(event) {
     let searchedValue = event.target.value;
     let filtered = []
+    let errorVal = []
     console.log(searchedValue);
     for(var i = 0;i < initialData.length;i++) {
       console.log(initialData[i].title.match(searchedValue) || initialData[i].author.match(searchedValue));
@@ -56,12 +61,20 @@ class App extends Component {
         filtered.push(initialData[i]);
       }
     }
+    if(filtered.length === 0) {
+      let error =
+        {
+          title : "Unable to search for : " + searchedValue,
+          author : ""
+        }
+        errorVal.push(error);
+    }
 
-    this.setState({ search : searchedValue, data : filtered });
+    this.setState({ search : searchedValue, data : filtered, error : errorVal});
   }
 
   render() {
-    const { search, data } = this.state;
+    const { search, data, error } = this.state;
     return (
       <div className="App container">
         <FormGroup controlId="formBasicText">
@@ -69,13 +82,22 @@ class App extends Component {
           <FormControl type="text" onChange={this.searchParam} placeholder="Enter your search here..." />
         </FormGroup>
         <hr />
-        <h3 style={{ textAlign: 'left' }}>You searched for : {search} </h3>
+        <h3 style={{ textAlign: 'left' }}>You searched for <b>{search}</b> - <b>{data.length}</b> results founds</h3>
         <div>
           {
             data.map((each, index) => (
               <div className="jumbotron" key={index}>
                   <h3 style={{ fontWeight:'700', textTransform:'uppercase' }}>{each.title}</h3>
                   <h4>By {each.author}</h4>
+              </div>
+            ))
+          }
+        </div>
+        <div>
+          {
+            error.map((each, index) => (
+              <div className="jumbotron">
+                  <h2>No results found for : {search}</h2>
               </div>
             ))
           }
